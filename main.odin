@@ -1,13 +1,16 @@
 package main
 import "core:fmt"
+import "vendor:raylib"
 import "test"
 
 main :: proc() {
-    when ODIN_DEBUG == true {
-        fmt.print("Debuging\n")
+    raylib.InitWindow(640, 512, "Odin - Raylib")
+
+    for !raylib.WindowShouldClose() {
+        raylib.BeginDrawing()
+        raylib.ClearBackground(raylib.RAYWHITE)
+        raylib.EndDrawing()
     }
-    
-    fmt.print("Hello World!\n")
-    test.testing()
-    test.test_again(5)
+
+    raylib.CloseWindow()
 }
