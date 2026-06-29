@@ -18,7 +18,7 @@
             "problemMatcher": [],
             "group": {
                 "kind": "build",
-                "isDefault": true
+                "isDefault": false
             }
         },
         {
@@ -26,6 +26,7 @@
             "label": "Run (Debug)",
             "command": "${workspaceFolder}/./odintest-debug",
             "problemMatcher": [],
+            "dependsOrder": "sequence",
             "dependsOn": [
                 "Build (Debug)"
             ],
@@ -39,6 +40,7 @@
             "label": "Run (Release`)",
             "command": "${workspaceFolder}/./odintest",
             "problemMatcher": [],
+            "dependsOrder": "sequence",
             "dependsOn": [
                 "Build (Release)"
             ],
