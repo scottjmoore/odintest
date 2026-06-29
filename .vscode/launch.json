@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "configurations": [
+        {
+            "type": "lldb-dap",
+            "request": "launch",
+            "name": "Debug",
+            "preLaunchTask": "Build (Debug)",
+            "program": "odintest-debug",
+            "args": [],
+            "env": {
+           }
+        },
+    ]
+}

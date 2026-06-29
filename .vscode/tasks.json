@@ -1,0 +1,51 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build (Debug)",
+            "command": "odin build ${workspaceFolder} -debug -show-timings -out:odintest-debug",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "Build (Release)",
+            "command": "odin build ${workspaceFolder} -show-timings -out:odintest",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "process",
+            "label": "Run (Debug)",
+            "command": "${workspaceFolder}/./odintest-debug",
+            "problemMatcher": [],
+            "dependsOn": [
+                "Build (Debug)"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "type": "process",
+            "label": "Run (Release`)",
+            "command": "${workspaceFolder}/./odintest",
+            "problemMatcher": [],
+            "dependsOn": [
+                "Build (Release)"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        }
+    ]
+}
