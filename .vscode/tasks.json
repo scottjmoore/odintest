@@ -37,7 +37,7 @@
         },
         {
             "type": "process",
-            "label": "Run (Release`)",
+            "label": "Run (Release)",
             "command": "${workspaceFolder}/./odintest",
             "problemMatcher": [],
             "dependsOrder": "sequence",
