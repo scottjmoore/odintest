@@ -7,6 +7,12 @@ import "test"
 
 
 main :: proc() {
+
+    pos,vec : raylib.Vector2
+
+    pos = {500,500}
+    vec = {0,-500}
+
     raylib.InitWindow(640, 512, "Odin - Raylib")
     defer raylib.CloseWindow()
 
@@ -41,31 +47,22 @@ main :: proc() {
         raylib.DrawRectangleV(player.pos, player.size, player.color)
 
         if raylib.IsKeyDown(.LEFT) {
-            player.vel.x = -400 * raylib.GetFrameTime()
+            player.vel.x = -200
         } else if raylib.IsKeyDown(.RIGHT) {
-            player.vel.x = 400 * raylib.GetFrameTime()
+            player.vel.x = 200
         } else {
             player.vel.x = 0
         }
 
-        player.vel.y += 9.8 * raylib.GetFrameTime()
+        player.vel.y += 200 * raylib.GetFrameTime()
+
 
         if raylib.IsKeyDown(.SPACE) && player.jumping == false {
-            player.vel.y = -5
+            player.vel.y = -200
             player.jumping = true
         }
 
-        if raylib.IsKeyDown(.W) {
-            player.size.x -= 50 * raylib.GetFrameTime()
-            player.size.y -= 50 * raylib.GetFrameTime()
-        }
-
-        if raylib.IsKeyDown(.S) {
-            player.size.x += 50 * raylib.GetFrameTime()
-            player.size.y += 50 * raylib.GetFrameTime()
-        }
-
-        player.pos += player.vel
+        player.pos += (player.vel * raylib.GetFrameTime())
 
         if player.pos.x < 0 {
             player.pos.x = 0
@@ -76,13 +73,15 @@ main :: proc() {
         if player.pos.y < 0 {
             player.pos.y = 0
         }
-        if player.pos.y > f32(raylib.GetScreenHeight())-player.size.y {
+        if player.pos.y >= f32(raylib.GetScreenHeight())-player.size.y {
             player.pos.y = f32(raylib.GetScreenHeight())-player.size.y
             player.vel.y = 0
             player.jumping = false;
         }
 
         raylib.DrawFPS(10, 10)
-        raylib.EndDrawing()
+        raylib.EndDrawing() 
+
+        fmt.println(player.vel.y, raylib.GetFrameTime())
     }
 }
