@@ -11,7 +11,19 @@ Player :: struct {
     color: raylib.Color
 }
 
-PlayerCreate :: proc(pos: raylib.Vector2, size: raylib.Vector2, color: raylib.Color) -> Player {
+@(private="file")
+PlayerCreateZ :: proc() -> Player {
+    return Player {
+        {0, 0},
+        {0, 0},
+        {0, 0},
+        false,
+        {0, 0, 0, 0}
+    }
+}
+
+@(private="file")
+PlayerCreateP :: proc(pos: raylib.Vector2, size: raylib.Vector2, color: raylib.Color) -> Player {
    return Player {
         pos,
         size,
@@ -20,3 +32,5 @@ PlayerCreate :: proc(pos: raylib.Vector2, size: raylib.Vector2, color: raylib.Co
         color
     }
 }
+
+PlayerCreate :: proc{PlayerCreateZ, PlayerCreateP}

@@ -27,6 +27,7 @@ main :: proc() {
     //raylib.SetTargetFPS(60)
 
     player := PlayerCreate({320, 256}, {32, 32}, {160, 255, 0, 128})
+    player_2 := PlayerCreate()
 
     for !raylib.WindowShouldClose() {
         raylib.BeginDrawing()
