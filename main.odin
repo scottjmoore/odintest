@@ -14,15 +14,13 @@ Player :: struct {
 }
 
 PlayerCreate :: proc(pos: raylib.Vector2, size: raylib.Vector2, color: raylib.Color) -> Player {
-    player := Player {
+   return Player {
         pos,
         size,
         {0,0},
         false,
         color
     }
-
-    return player
 }
 
 Item :: struct {
@@ -60,7 +58,6 @@ main :: proc() {
         }
 
         player.vel.y += 200 * raylib.GetFrameTime()
-
 
         if raylib.IsKeyDown(.SPACE) && player.jumping == false {
             player.vel.y = -200
