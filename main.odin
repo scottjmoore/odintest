@@ -10,20 +10,27 @@ main :: proc() {
     raylib.InitWindow(640, 512, "Odin - Raylib")
     defer raylib.CloseWindow()
 
-    player_pos := raylib.Vector2 {320, 256}
-
     Player :: struct {
         pos: raylib.Vector2,
         size: raylib.Vector2,
         vel: raylib.Vector2,
+        jumping: bool,
         color: raylib.Color
     }
-    //raylib.SetTargetFPS(60)
+
+    Item :: struct {
+        pos: raylib.Vector2,
+        size: raylib.Vector2,
+        color: raylib.Color
+    }
+
+    raylib.SetTargetFPS(60)
 
     player := Player {
         {320, 256},             // position
         {32, 32},               // size
         {0, 0},                 // velocity
+        false,
         {160, 255, 0, 128}      // color
     }
 
@@ -34,16 +41,19 @@ main :: proc() {
         raylib.DrawRectangleV(player.pos, player.size, player.color)
 
         if raylib.IsKeyDown(.LEFT) {
-            player.pos.x -= 400 * raylib.GetFrameTime()
+            player.vel.x = -400 * raylib.GetFrameTime()
+        } else if raylib.IsKeyDown(.RIGHT) {
+            player.vel.x = 400 * raylib.GetFrameTime()
+        } else {
+            player.vel.x = 0
         }
-        if raylib.IsKeyDown(.RIGHT) {
-            player.pos.x += 400 * raylib.GetFrameTime()
-        }
-        if raylib.IsKeyDown(.UP) {
-            player.pos.y -= 400 * raylib.GetFrameTime()
-        }
-        if raylib.IsKeyDown(.DOWN) {
-            player.pos.y += 400 * raylib.GetFrameTime()
+
+        player.vel.y += 9.8 * raylib.GetFrameTime()
+
+        if raylib.IsKeyDown(.SPACE) && player.jumping == false {
+            player.vel.y = -5
+            
+            player.jumping = true
         }
 
         if raylib.IsKeyDown(.W) {
@@ -56,6 +66,8 @@ main :: proc() {
             player.size.y += 50 * raylib.GetFrameTime()
         }
 
+        player.pos += player.vel
+
         if player.pos.x < 0 {
             player.pos.x = 0
         }
@@ -67,6 +79,8 @@ main :: proc() {
         }
         if player.pos.y > f32(raylib.GetScreenHeight())-player.size.y {
             player.pos.y = f32(raylib.GetScreenHeight())-player.size.y
+            player.vel.y = 0
+            player.jumping = false;
         }
 
         raylib.DrawFPS(10, 10)
