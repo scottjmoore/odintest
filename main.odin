@@ -5,6 +5,31 @@ import "vendor:raylib"
 
 import "test"
 
+Player :: struct {
+    pos: raylib.Vector2,
+    size: raylib.Vector2,
+    vel: raylib.Vector2,
+    jumping: bool,
+    color: raylib.Color
+}
+
+PlayerCreate :: proc(pos: raylib.Vector2, size: raylib.Vector2, color: raylib.Color) -> Player {
+    player := Player {
+        pos,
+        size,
+        {0,0},
+        false,
+        color
+    }
+
+    return player
+}
+
+Item :: struct {
+    pos: raylib.Vector2,
+    size: raylib.Vector2,
+    color: raylib.Color
+}
 
 main :: proc() {
 
@@ -16,29 +41,9 @@ main :: proc() {
     raylib.InitWindow(640, 512, "Odin - Raylib")
     defer raylib.CloseWindow()
 
-    Player :: struct {
-        pos: raylib.Vector2,
-        size: raylib.Vector2,
-        vel: raylib.Vector2,
-        jumping: bool,
-        color: raylib.Color
-    }
-
-    Item :: struct {
-        pos: raylib.Vector2,
-        size: raylib.Vector2,
-        color: raylib.Color
-    }
-
     //raylib.SetTargetFPS(60)
 
-    player := Player {
-        {320, 256},             // position
-        {32, 32},               // size
-        {0, 0},                 // velocity
-        false,
-        {160, 255, 0, 128}      // color
-    }
+    player := PlayerCreate({320, 256}, {32, 32}, {160, 255, 0, 128})
 
     for !raylib.WindowShouldClose() {
         raylib.BeginDrawing()
