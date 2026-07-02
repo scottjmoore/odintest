@@ -30,7 +30,7 @@ main :: proc() {
         color: raylib.Color
     }
 
-    raylib.SetTargetFPS(60)
+    //raylib.SetTargetFPS(60)
 
     player := Player {
         {320, 256},             // position
@@ -81,7 +81,5 @@ main :: proc() {
 
         raylib.DrawFPS(10, 10)
         raylib.EndDrawing() 
-
-        fmt.println(player.vel.y, raylib.GetFrameTime())
     }
 }
