@@ -52,7 +52,6 @@ main :: proc() {
 
         if raylib.IsKeyDown(.SPACE) && player.jumping == false {
             player.vel.y = -5
-            
             player.jumping = true
         }
 
