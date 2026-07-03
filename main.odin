@@ -13,24 +13,30 @@ Item :: struct {
     color: raylib.Color
 }
 
-
 main :: proc() {
-
-    pos,vec : raylib.Vector2
-
-    pos = {500,500}
-    vec = {0,-500}
 
     raylib.InitWindow(640, 512, "Odin - Raylib")
     defer raylib.CloseWindow()
 
-    raylib.SetTargetFPS(1000)
+    raylib.SetTargetFPS(60)
 
     player := PlayerCreate({320, 256}, {16, 16}, {160, 255, 0, 128})
+
+    items: [dynamic]Item
+    defer delete(items)
+
+    append(&items, Item{{100, 100}, {16, 16}, {255, 255, 0, 255}})
+    append(&items, Item{{540, 100}, {16, 16}, {255, 255, 0, 255}})
+    append(&items, Item{{540, 412}, {16, 16}, {255, 255, 0, 255}})
+    append(&items, Item{{100, 412}, {16, 16}, {255, 255, 0, 255}})
 
     for !raylib.WindowShouldClose() {
         raylib.BeginDrawing()
         raylib.ClearBackground(raylib.BLUE)
+
+        for item in items {
+            raylib.DrawRectangleV(item.pos, item.size, item.color)
+        }
 
         raylib.DrawRectangleV(player.pos, player.size, player.color)
 
