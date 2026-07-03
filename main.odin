@@ -20,7 +20,7 @@ main :: proc() {
 
     raylib.SetTargetFPS(60)
 
-    player := PlayerCreate({320, 256}, {16, 16}, {160, 255, 0, 128})
+    player := PlayerCreate({320, 256}, {16, 16}, {160, 255, 255, 200})
 
     items: [dynamic]Item
     defer delete(items)
@@ -42,9 +42,9 @@ main :: proc() {
 
         if player.jumping == false {
             if raylib.IsKeyDown(.LEFT) {
-                player.vel.x -= 400 * raylib.GetFrameTime()
+                player.vel.x -= 800 * raylib.GetFrameTime()
             } else if raylib.IsKeyDown(.RIGHT) {
-                player.vel.x += 400 * raylib.GetFrameTime()
+                player.vel.x += 800 * raylib.GetFrameTime()
             } else {
                 player.vel.x *= 0.95 * (1-raylib.GetFrameTime())
             }
