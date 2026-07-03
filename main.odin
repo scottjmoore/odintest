@@ -1,11 +1,6 @@
 package odintest
 
-import "core:fmt"
 import "vendor:raylib"
-
-import "test"
-
-
 
 Item :: struct {
     pos: raylib.Vector2,
@@ -38,7 +33,6 @@ main :: proc() {
             raylib.DrawRectangleV(item.pos, item.size, item.color)
         }
 
-        //raylib.DrawRectangleV(player.pos, player.size, player.color)
         raylib.DrawTriangle(player.pos + {-16, 16}, player.pos + {16, 16}, player.pos + {0, -16}, player.color)
 
         if player.jumping == false {
