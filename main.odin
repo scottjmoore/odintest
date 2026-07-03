@@ -33,7 +33,7 @@ main :: proc() {
             raylib.DrawRectangleV(item.pos, item.size, item.color)
         }
 
-        raylib.DrawTriangle(player.pos + {-16, 16}, player.pos + {16, 16}, player.pos + {0, -16}, player.color)
+        PlayerDraw(player)
 
         if player.jumping == false {
             if raylib.IsKeyDown(.LEFT) {
@@ -52,12 +52,10 @@ main :: proc() {
             player.vel.x *= 0.9999999 * (1-raylib.GetFrameTime())
         }
 
-            
         if raylib.IsKeyDown(.SPACE) && player.jumping == false {
             player.vel.y = -200
             player.jumping = true
         }
-
 
         player.vel.y += 200 * raylib.GetFrameTime()
         player.pos += (player.vel * raylib.GetFrameTime())

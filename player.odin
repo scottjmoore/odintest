@@ -8,7 +8,7 @@ Player :: struct {
     size: raylib.Vector2,
     vel: raylib.Vector2,
     jumping: bool,
-    color: raylib.Color
+    color: raylib.Color,
 }
 
 @(private="file")
@@ -18,7 +18,7 @@ PlayerCreateZ :: proc() -> Player {
         {0, 0},
         {0, 0},
         false,
-        {0, 0, 0, 0}
+        {0, 0, 0, 0},
     }
 }
 
@@ -29,8 +29,12 @@ PlayerCreateP :: proc(pos: raylib.Vector2, size: raylib.Vector2, color: raylib.C
         size,
         {0,0},
         false,
-        color
+        color,
     }
+}
+
+PlayerDraw :: proc(p: Player) {
+    raylib.DrawTriangle(p.pos + {-16, 16}, p.pos + {16, 16}, p.pos + {0, -16}, p.color)
 }
 
 PlayerCreate :: proc{PlayerCreateZ, PlayerCreateP}
