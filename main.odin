@@ -78,6 +78,8 @@ main :: proc() {
             player.jumping = false;
         }
 
+        player.angle += 90 * raylib.GetFrameTime()
+
         when ODIN_DEBUG {
             raylib.DrawFPS(10, 10)
         }

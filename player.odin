@@ -1,5 +1,6 @@
 package odintest
 
+import "core:math"
 import "vendor:raylib"
 
 
@@ -7,6 +8,7 @@ Player :: struct {
     pos: raylib.Vector2,
     size: raylib.Vector2,
     vel: raylib.Vector2,
+    angle: f32,
     jumping: bool,
     color: raylib.Color,
 }
@@ -17,6 +19,7 @@ PlayerCreateZ :: proc() -> Player {
         {0, 0},
         {0, 0},
         {0, 0},
+        0,
         false,
         {0, 0, 0, 0},
     }
@@ -28,13 +31,14 @@ PlayerCreateP :: proc(pos: raylib.Vector2, size: raylib.Vector2, color: raylib.C
         pos,
         size,
         {0,0},
+        0,
         false,
         color,
     }
 }
 
 PlayerDraw :: proc(p: Player) {
-    raylib.DrawTriangle(p.pos + {-16, 16}, p.pos + {16, 16}, p.pos + {0, -16}, p.color)
+    raylib.DrawPoly(p.pos, 8, p.size.x, p.angle, p.color)
 }
 
 PlayerCreate :: proc{PlayerCreateZ, PlayerCreateP}
