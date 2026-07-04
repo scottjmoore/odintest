@@ -1,5 +1,6 @@
 package odintest
 
+import "core:fmt"
 import "vendor:raylib"
 
 Item :: struct {
@@ -14,7 +15,7 @@ main :: proc() {
     raylib.InitWindow(640, 512, "Odin - Raylib")
     defer raylib.CloseWindow()
 
-    //raylib.SetTargetFPS(60)
+    raylib.SetTargetFPS(60)
 
     player := PlayerCreate({320, 256}, {32, 32}, {160, 255, 255, 200})
 
@@ -83,6 +84,12 @@ main :: proc() {
 
         when ODIN_DEBUG {
             raylib.DrawFPS(10, 10)
+            fmt.println(
+                raylib.GetGamepadAxisMovement(0, .LEFT_X),
+                raylib.GetGamepadAxisMovement(0, .LEFT_Y),
+                raylib.GetGamepadAxisMovement(0, .RIGHT_X),
+                raylib.GetGamepadAxisMovement(0, .RIGHT_Y)
+            )
         }
 
         raylib.EndDrawing() 
