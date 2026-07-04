@@ -38,7 +38,7 @@ PlayerCreateP :: proc(pos: raylib.Vector2, size: raylib.Vector2, color: raylib.C
 }
 
 PlayerDraw :: proc(p: Player) {
-    raylib.DrawPoly(p.pos, 8, p.size.x, p.angle, p.color)
+    raylib.DrawPoly(p.pos, 3, p.size.x, p.angle, p.color)
 }
 
 PlayerCreate :: proc{PlayerCreateZ, PlayerCreateP}
