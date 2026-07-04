@@ -38,7 +38,10 @@ PlayerCreateP :: proc(pos: raylib.Vector2, size: raylib.Vector2, color: raylib.C
 }
 
 PlayerDraw :: proc(p: Player) {
-    raylib.DrawPoly(p.pos, 3, p.size.x, p.angle, p.color)
+    raylib.DrawPoly(p.pos, 3, p.size.x, p.angle+30, p.color)
+    raylib.DrawCircleV(p.pos + {math.sin(math.to_radians(p.angle))*24, -math.cos(math.to_radians(p.angle))*24}, 8, {255, 0, 0, 160})
+    raylib.DrawCircleV(p.pos + {math.sin(math.to_radians(p.angle+120))*24, -math.cos(math.to_radians(p.angle+120))*24}, 8, {0, 255, 0, 160})
+    raylib.DrawCircleV(p.pos + {math.sin(math.to_radians(p.angle+240))*24, -math.cos(math.to_radians(p.angle+240))*24}, 8, {0, 0, 255, 160})
 }
 
 PlayerCreate :: proc{PlayerCreateZ, PlayerCreateP}
