@@ -10,12 +10,13 @@ Item :: struct {
 
 main :: proc() {
 
+    raylib.SetConfigFlags({.MSAA_4X_HINT})
     raylib.InitWindow(640, 512, "Odin - Raylib")
     defer raylib.CloseWindow()
 
-    raylib.SetTargetFPS(60)
+    //raylib.SetTargetFPS(60)
 
-    player := PlayerCreate({320, 256}, {16, 16}, {160, 255, 255, 200})
+    player := PlayerCreate({320, 256}, {32, 32}, {160, 255, 255, 200})
 
     items: [dynamic]Item
     defer delete(items)
