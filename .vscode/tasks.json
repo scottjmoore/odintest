@@ -4,7 +4,7 @@
         {
             "type": "shell",
             "label": "Build (Debug)",
-            "command": "odin build ${workspaceFolder} -debug -show-timings -out:odintest-debug",
+            "command": "odin build ${workspaceFolder}/src -debug -show-timings -out:${workspaceFolder}/bin/odintest-debug",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -14,7 +14,7 @@
         {
             "type": "shell",
             "label": "Build (Release)",
-            "command": "odin build ${workspaceFolder} -show-timings -out:odintest",
+            "command": "odin build ${workspaceFolder}/src -show-timings -out:${workspaceFolder}/bin/odintest",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -24,7 +24,7 @@
         {
             "type": "process",
             "label": "Run (Debug)",
-            "command": "${workspaceFolder}/./odintest-debug",
+            "command": "${workspaceFolder}/bin/odintest-debug",
             "problemMatcher": [],
             "dependsOrder": "sequence",
             "dependsOn": [
@@ -38,7 +38,7 @@
         {
             "type": "process",
             "label": "Run (Release)",
-            "command": "${workspaceFolder}/./odintest",
+            "command": "${workspaceFolder}/bin/odintest",
             "problemMatcher": [],
             "dependsOrder": "sequence",
             "dependsOn": [

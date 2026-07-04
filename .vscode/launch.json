@@ -6,7 +6,7 @@
             "request": "launch",
             "name": "Debug",
             "preLaunchTask": "Build (Debug)",
-            "program": "odintest-debug",
+            "program": "${workspaceFolder}/bin/odintest-debug",
             "args": [],
             "env": {
            }
