@@ -1,6 +1,7 @@
 package odintest
 
 import "core:fmt"
+import "core:math"
 import "vendor:raylib"
 
 Item :: struct {
@@ -80,15 +81,19 @@ main :: proc() {
             player.jumping = false;
         }
 
-        player.angle += 90 * raylib.GetFrameTime()
+        player.angle = math.to_degrees(math.atan2(
+                    raylib.GetGamepadAxisMovement(0, .RIGHT_X),
+                    -raylib.GetGamepadAxisMovement(0, .RIGHT_Y)))
 
         when ODIN_DEBUG {
             raylib.DrawFPS(10, 10)
             fmt.println(
-                raylib.GetGamepadAxisMovement(0, .LEFT_X),
-                raylib.GetGamepadAxisMovement(0, .LEFT_Y),
-                raylib.GetGamepadAxisMovement(0, .RIGHT_X),
-                raylib.GetGamepadAxisMovement(0, .RIGHT_Y)
+                math.to_degrees(math.atan2(
+                    raylib.GetGamepadAxisMovement(0, .LEFT_X),
+                    raylib.GetGamepadAxisMovement(0, .LEFT_Y)))+180,
+                math.to_degrees(math.atan2(
+                    raylib.GetGamepadAxisMovement(0, .RIGHT_X),
+                    raylib.GetGamepadAxisMovement(0, .RIGHT_Y)))+180
             )
         }
 
