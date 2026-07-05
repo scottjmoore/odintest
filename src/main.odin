@@ -22,7 +22,7 @@ main :: proc() {
     defer raylib.UnloadRenderTexture(shadow_texture)
     raylib.SetTextureFilter(shadow_texture.texture, .BILINEAR)
 
-    player := PlayerCreate({320, 256}, {32, 32}, {160, 255, 255, 200})
+    player := PlayerCreate({320, 256}, {32, 32}, {160, 255, 255, 255})
 
     items: [dynamic]Item
     defer delete(items)
@@ -34,6 +34,9 @@ main :: proc() {
 
     for !raylib.WindowShouldClose() {
         raylib.BeginTextureMode(shadow_texture)
+        for item in items {
+            raylib.DrawRectangleV((item.pos * {1, -1}) + {8, 490}, item.size, item.color)
+        }
         raylib.ClearBackground({0, 0, 0, 0})
         p := player
         p.pos *= {1, -1}
