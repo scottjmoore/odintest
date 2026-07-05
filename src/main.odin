@@ -62,17 +62,15 @@ main :: proc() {
 
         player.vel.y += 200 * raylib.GetFrameTime()*/
 
-        angle := math.to_degrees(math.atan2(
-                    raylib.GetGamepadAxisMovement(0, .LEFT_X),
-                    -raylib.GetGamepadAxisMovement(0, .LEFT_Y)))
+        left_x := raylib.GetGamepadAxisMovement(0, .LEFT_X)
+        left_y := raylib.GetGamepadAxisMovement(0, .LEFT_Y)
+        right_x := raylib.GetGamepadAxisMovement(0, .RIGHT_X)
+        right_y := raylib.GetGamepadAxisMovement(0, .RIGHT_Y)
 
-        player.vel = {raylib.GetGamepadAxisMovement(0, .LEFT_X) * 100,
-                    raylib.GetGamepadAxisMovement(0, .LEFT_Y) * 100}
+        angle := math.to_degrees(math.atan2(left_x, -left_y))
 
-        player.angle = math.to_degrees(math.atan2(
-                    raylib.GetGamepadAxisMovement(0, .RIGHT_X),
-                    -raylib.GetGamepadAxisMovement(0, .RIGHT_Y)))
-
+        player.vel = {left_x * 100, left_y * 100}
+        player.angle = math.to_degrees(math.atan2(right_x, -right_y))
         player.pos += (player.vel * raylib.GetFrameTime())
 
         screen_width := f32(raylib.GetScreenWidth())
