@@ -31,6 +31,10 @@ main :: proc() {
     append(&items, Item{{540, 100}, {16, 16}, {255, 255, 0, 255}})
     append(&items, Item{{540, 412}, {16, 16}, {255, 255, 0, 255}})
     append(&items, Item{{100, 412}, {16, 16}, {255, 255, 0, 255}})
+    append(&items, Item{{200, 200}, {16, 16}, {255, 255, 0, 255}})
+    append(&items, Item{{440, 200}, {16, 16}, {255, 255, 0, 255}})
+    append(&items, Item{{440, 312}, {16, 16}, {255, 255, 0, 255}})
+    append(&items, Item{{200, 312}, {16, 16}, {255, 255, 0, 255}})
 
     for !raylib.WindowShouldClose() {
         raylib.BeginTextureMode(shadow_texture)
