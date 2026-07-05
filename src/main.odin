@@ -38,7 +38,7 @@ main :: proc() {
 
         PlayerDraw(player)
 
-        if player.jumping == false {
+        /*if player.jumping == false {
             if raylib.IsKeyDown(.LEFT) {
                 player.vel.x -= 800 * raylib.GetFrameTime()
             } else if raylib.IsKeyDown(.RIGHT) {
@@ -60,7 +60,19 @@ main :: proc() {
             player.jumping = true
         }
 
-        player.vel.y += 200 * raylib.GetFrameTime()
+        player.vel.y += 200 * raylib.GetFrameTime()*/
+
+        angle := math.to_degrees(math.atan2(
+                    raylib.GetGamepadAxisMovement(0, .LEFT_X),
+                    -raylib.GetGamepadAxisMovement(0, .LEFT_Y)))
+
+        player.vel = {raylib.GetGamepadAxisMovement(0, .LEFT_X) * 100,
+                    raylib.GetGamepadAxisMovement(0, .LEFT_Y) * 100}
+
+        player.angle = math.to_degrees(math.atan2(
+                    raylib.GetGamepadAxisMovement(0, .RIGHT_X),
+                    -raylib.GetGamepadAxisMovement(0, .RIGHT_Y)))
+
         player.pos += (player.vel * raylib.GetFrameTime())
 
         screen_width := f32(raylib.GetScreenWidth())
@@ -81,20 +93,9 @@ main :: proc() {
             player.jumping = false;
         }
 
-        player.angle = math.to_degrees(math.atan2(
-                    raylib.GetGamepadAxisMovement(0, .RIGHT_X),
-                    -raylib.GetGamepadAxisMovement(0, .RIGHT_Y)))
-
         when ODIN_DEBUG {
             raylib.DrawFPS(10, 10)
-            fmt.println(
-                math.to_degrees(math.atan2(
-                    raylib.GetGamepadAxisMovement(0, .LEFT_X),
-                    raylib.GetGamepadAxisMovement(0, .LEFT_Y)))+180,
-                math.to_degrees(math.atan2(
-                    raylib.GetGamepadAxisMovement(0, .RIGHT_X),
-                    raylib.GetGamepadAxisMovement(0, .RIGHT_Y)))+180
-            )
+            fmt.println(angle)
         }
 
         raylib.EndDrawing() 
