@@ -139,7 +139,7 @@ main :: proc() {
         raylib.EndDrawing() 
 
         for &item in items {
-            if raylib.Vector2Distance(player.pos, item.pos) < 16 {
+            if raylib.Vector2Distance(player.pos, item.pos) < 32 {
                 item.collected = true
             }
         }
