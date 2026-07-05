@@ -7,7 +7,8 @@ import "vendor:raylib"
 Item :: struct {
     pos: raylib.Vector2,
     size: raylib.Vector2,
-    color: raylib.Color
+    color: raylib.Color,
+    collected: bool
 }
 
 main :: proc() {
@@ -27,19 +28,21 @@ main :: proc() {
     items: [dynamic]Item
     defer delete(items)
 
-    append(&items, Item{{100, 100}, {16, 16}, {255, 255, 0, 255}})
-    append(&items, Item{{540, 100}, {16, 16}, {255, 255, 0, 255}})
-    append(&items, Item{{540, 412}, {16, 16}, {255, 255, 0, 255}})
-    append(&items, Item{{100, 412}, {16, 16}, {255, 255, 0, 255}})
-    append(&items, Item{{200, 200}, {16, 16}, {255, 255, 0, 255}})
-    append(&items, Item{{440, 200}, {16, 16}, {255, 255, 0, 255}})
-    append(&items, Item{{440, 312}, {16, 16}, {255, 255, 0, 255}})
-    append(&items, Item{{200, 312}, {16, 16}, {255, 255, 0, 255}})
+    append(&items, Item{{100, 100}, {16, 16}, {255, 255, 0, 255}, false})
+    append(&items, Item{{540, 100}, {16, 16}, {255, 255, 0, 255}, false})
+    append(&items, Item{{540, 412}, {16, 16}, {255, 255, 0, 255}, false})
+    append(&items, Item{{100, 412}, {16, 16}, {255, 255, 0, 255}, false})
+    append(&items, Item{{200, 200}, {16, 16}, {255, 255, 0, 255}, false})
+    append(&items, Item{{440, 200}, {16, 16}, {255, 255, 0, 255}, false})
+    append(&items, Item{{440, 312}, {16, 16}, {255, 255, 0, 255}, false})
+    append(&items, Item{{200, 312}, {16, 16}, {255, 255, 0, 255}, false})
 
     for !raylib.WindowShouldClose() {
         raylib.BeginTextureMode(shadow_texture)
         for item in items {
-            raylib.DrawRectangleV((item.pos * {1, -1}) + {8, 490}, item.size, item.color)
+            if !item.collected {
+                raylib.DrawRectangleV((item.pos * {1, -1}) + {8, 490}, item.size, item.color)
+            }
         }
         raylib.ClearBackground({0, 0, 0, 0})
         p := player
@@ -55,7 +58,9 @@ main :: proc() {
         raylib.DrawTexture(shadow_texture.texture, 0, 0, {0, 0, 0, 64})
         
         for item in items {
-            raylib.DrawRectangleV(item.pos, item.size, item.color)
+            if !item.collected {
+                raylib.DrawRectangleV(item.pos, item.size, item.color)
+            }
         }
 
         PlayerDraw(player)
@@ -132,5 +137,11 @@ main :: proc() {
         }
 
         raylib.EndDrawing() 
+
+        for &item in items {
+            if raylib.Vector2Distance(player.pos, item.pos) < 16 {
+                item.collected = true
+            }
+        }
     }
 }
