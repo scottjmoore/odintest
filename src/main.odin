@@ -35,7 +35,6 @@ main :: proc() {
     for !raylib.WindowShouldClose() {
         raylib.BeginTextureMode(shadow_texture)
         raylib.ClearBackground({0, 0, 0, 0})
-        //raylib.DrawCircle(8 + i32(player.pos.x), 506 - i32(player.pos.y), 32, {0, 0, 0, 255})
         p := player
         p.pos *= {1, -1}
         p.pos += {16, 500}
