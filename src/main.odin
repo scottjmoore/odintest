@@ -18,6 +18,10 @@ main :: proc() {
 
     raylib.SetTargetFPS(60)
 
+    shadow_texture := raylib.LoadRenderTexture(640, 512)
+    defer raylib.UnloadRenderTexture(shadow_texture)
+    raylib.SetTextureFilter(shadow_texture.texture, .BILINEAR)
+
     player := PlayerCreate({320, 256}, {32, 32}, {160, 255, 255, 200})
 
     items: [dynamic]Item
@@ -29,9 +33,21 @@ main :: proc() {
     append(&items, Item{{100, 412}, {16, 16}, {255, 255, 0, 255}})
 
     for !raylib.WindowShouldClose() {
+        raylib.BeginTextureMode(shadow_texture)
+        raylib.ClearBackground({0, 0, 0, 0})
+        //raylib.DrawCircle(8 + i32(player.pos.x), 506 - i32(player.pos.y), 32, {0, 0, 0, 255})
+        p := player
+        p.pos *= {1, -1}
+        p.pos += {16, 500}
+        p.angle *= -1
+        p.angle += 180
+        PlayerDraw(p)
+        raylib.EndTextureMode()
+
         raylib.BeginDrawing()
         raylib.ClearBackground(raylib.BLUE)
-
+        raylib.DrawTexture(shadow_texture.texture, 0, 0, {0, 0, 0, 64})
+        
         for item in items {
             raylib.DrawRectangleV(item.pos, item.size, item.color)
         }
