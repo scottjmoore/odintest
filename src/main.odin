@@ -38,62 +38,75 @@ main :: proc() {
 
         PlayerDraw(player)
 
-        /*if player.jumping == false {
-            if raylib.IsKeyDown(.LEFT) {
-                player.vel.x -= 800 * raylib.GetFrameTime()
+        left : raylib.Vector2 = {raylib.GetGamepadAxisMovement(0, .LEFT_X), raylib.GetGamepadAxisMovement(0, .LEFT_Y)}
+        right : raylib.Vector2 = {raylib.GetGamepadAxisMovement(0, .RIGHT_X), raylib.GetGamepadAxisMovement(0, .RIGHT_Y)}
+
+        deadzone : raylib.Vector2 = {0.2, 0.2}
+
+        if left.x < deadzone.x && left.x > -deadzone.x {
+            left.x = 0
+        }
+        if left.y < deadzone.y && left.y > -deadzone.y {
+            left.y = 0
+        }
+
+        if right.x < deadzone.x && right.x > -deadzone.x {
+            right.x = 0
+        }
+        if right.y < deadzone.y && right.y > -deadzone.y {
+            right.y = 0
+        }
+
+        if raylib.IsKeyDown(.LEFT) {
+                player.vel.x -= max_speed * raylib.GetFrameTime()
             } else if raylib.IsKeyDown(.RIGHT) {
-                player.vel.x += 800 * raylib.GetFrameTime()
-            } else {
-                player.vel.x *= 0.95 * (1-raylib.GetFrameTime())
+                player.vel.x += max_speed * raylib.GetFrameTime()
             }
-            if player.vel.x > 200 {
-                player.vel.x = 200
-            } else if player.vel.x < -200 {
-                player.vel.x = -200
-            }
-        } else {
-            player.vel.x *= 0.9999999 * (1-raylib.GetFrameTime())
+
+        player.vel += (left * 100)
+
+        max_speed :: 200
+
+        if player.vel.x > max_speed {
+            player.vel.x = max_speed
+        } else if player.vel.x < -max_speed {
+            player.vel.x = -max_speed
         }
 
-        if raylib.IsKeyDown(.SPACE) && player.jumping == false {
-            player.vel.y = -200
-            player.jumping = true
+        if player.vel.y > max_speed {
+            player.vel.y = max_speed
+        } else if player.vel.y < -max_speed {
+            player.vel.y = -max_speed
         }
 
-        player.vel.y += 200 * raylib.GetFrameTime()*/
-
-        left_x := raylib.GetGamepadAxisMovement(0, .LEFT_X)
-        left_y := raylib.GetGamepadAxisMovement(0, .LEFT_Y)
-        right_x := raylib.GetGamepadAxisMovement(0, .RIGHT_X)
-        right_y := raylib.GetGamepadAxisMovement(0, .RIGHT_Y)
-
-        angle := math.to_degrees(math.atan2(left_x, -left_y))
-
-        player.vel = {left_x * 100, left_y * 100}
-        player.angle = math.to_degrees(math.atan2(right_x, -right_y))
+        player.vel -= (player.vel - (player.vel * 0.9))
         player.pos += (player.vel * raylib.GetFrameTime())
+        
+        angle := math.to_degrees(math.atan2(left.x, -left.y))
+        player.angle = math.to_degrees(math.atan2(right.x, -right.y))
 
         screen_width := f32(raylib.GetScreenWidth())
         screen_height := f32(raylib.GetScreenHeight())
 
-        if player.pos.x < 0 {
-            player.pos.x = 0
+        if player.pos.x < player.size.x {
+            player.pos.x = player.size.x
+            player.vel.x = -player.vel.x
         }
         if player.pos.x > screen_width-player.size.x {
             player.pos.x = screen_width-player.size.x
+            player.vel.x = -player.vel.x
         }
-        if player.pos.y < 0 {
-            player.pos.y = 0
+        if player.pos.y < player.size.y {
+            player.pos.y = player.size.y
+            player.vel.y = -player.vel.y
         }
         if player.pos.y >= screen_height-player.size.y {
             player.pos.y = screen_height-player.size.y
-            player.vel.y = 0
-            player.jumping = false;
+            player.vel.y = -player.vel.y
         }
 
         when ODIN_DEBUG {
             raylib.DrawFPS(10, 10)
-            fmt.println(angle)
         }
 
         raylib.EndDrawing() 
