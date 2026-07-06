@@ -12,19 +12,8 @@ Item :: struct {
 }
 
 main :: proc() {
-    {
-        entities: Entities = EntitiesCreate()
-        defer EntitiesDestroy(entities)
-
-        e1 := entities->Add(&Entity{})
-        e2 := entities->Add(&Entity{})
-
-        e11 := e1.children->Add(&Entity{})
-        e21 := e2.children->Add(&Entity{})
-
-        e111 := e11.children->Add(&Entity{})
-        e211 := e21.children->Add(&Entity{})
-    }
+    entities: [dynamic]rawptr
+    defer delete(entities)
 
     raylib.SetConfigFlags({.MSAA_4X_HINT})
     raylib.InitWindow(640, 512, "Odin - Raylib")
@@ -36,7 +25,11 @@ main :: proc() {
     defer raylib.UnloadRenderTexture(shadow_texture)
     raylib.SetTextureFilter(shadow_texture.texture, .BILINEAR)
 
-    player := PlayerCreate({320, 256}, {32, 32}, {160, 255, 255, 255})
+    player := PlayerCreate(320, 256, 32)
+    player2 := PlayerCreate(320, 256, 32)
+    
+    append(&entities, &player)
+    append(&entities, &player2)
 
     items: [dynamic]Item
     defer delete(items)
@@ -63,7 +56,7 @@ main :: proc() {
         p.pos += {16, 500}
         p.angle *= -1
         p.angle += 180
-        PlayerDraw(p)
+        p.Draw(&p)
         raylib.EndTextureMode()
 
         raylib.BeginDrawing()
@@ -76,7 +69,11 @@ main :: proc() {
             }
         }
 
-        PlayerDraw(player)
+       
+        for rp in entities {
+            e := cast(^Entity)rp
+            e.Draw(e)
+        }
 
         left : raylib.Vector2 = {raylib.GetGamepadAxisMovement(0, .LEFT_X), raylib.GetGamepadAxisMovement(0, .LEFT_Y)}
         right : raylib.Vector2 = {raylib.GetGamepadAxisMovement(0, .RIGHT_X), raylib.GetGamepadAxisMovement(0, .RIGHT_Y)}
@@ -145,14 +142,21 @@ main :: proc() {
             player.vel.y = -player.vel.y
         }
 
+        raylib.DrawText(raylib.TextFormat("Health: %08i", player.health), 12, 12, 20, raylib.BLACK)
+        raylib.DrawText(raylib.TextFormat("Health: %08i", player.health), 10, 10, 20, raylib.GREEN)
+
         when ODIN_DEBUG {
-            raylib.DrawFPS(10, 10)
+            raylib.DrawFPS(10, 480)
         }
 
         raylib.EndDrawing() 
 
         for &item in items {
             if raylib.Vector2Distance(player.pos, item.pos) < 32 {
+                if !item.collected {
+                    player.health += 100
+                }
+
                 item.collected = true
             }
         }
