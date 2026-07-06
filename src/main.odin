@@ -26,7 +26,7 @@ main :: proc() {
     raylib.SetTextureFilter(shadow_texture.texture, .BILINEAR)
 
     player := PlayerCreate(320, 256, 32)
-    player2 := PlayerCreate(320, 256, 32)
+    player2 := PlayerCreate(160, 128, 32)
     
     append(&entities, &player)
     append(&entities, &player2)
@@ -51,12 +51,15 @@ main :: proc() {
             }
         }
         raylib.ClearBackground({0, 0, 0, 0})
-        p := player
-        p.pos *= {1, -1}
-        p.pos += {16, 500}
-        p.angle *= -1
-        p.angle += 180
-        p.Draw(&p)
+        for rp in entities {
+            e := cast(^Entity)rp
+            p := e^
+            p.pos *= {1, -1}
+            p.pos += {16, 500}
+            p.angle *= -1
+            p.angle += 180
+            p.Draw(&p)
+        }
         raylib.EndTextureMode()
 
         raylib.BeginDrawing()
@@ -121,6 +124,8 @@ main :: proc() {
         
         angle := math.to_degrees(math.atan2(left.x, -left.y))
         player.angle = math.to_degrees(math.atan2(right.x, -right.y))
+
+        player2.angle += 100 * raylib.GetFrameTime()
 
         screen_width := f32(raylib.GetScreenWidth())
         screen_height := f32(raylib.GetScreenHeight())
