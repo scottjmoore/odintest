@@ -7,13 +7,12 @@ import "vendor:raylib"
 Player :: struct {
     using entity: Entity,
     health: int,
-
-    //Draw: proc(p: Player)
 }
 
 PlayerCreate :: proc(x: f32, y: f32, size: f32) -> Player {
     p: Player
     
+    p.type = type_of(p)
     p.pos = {x, y}
     p.vel = {0, 0}
     p.size = {size, size}

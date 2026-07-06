@@ -4,13 +4,6 @@ import "core:fmt"
 import "core:math"
 import "vendor:raylib"
 
-Item :: struct {
-    pos: raylib.Vector2,
-    size: raylib.Vector2,
-    color: raylib.Color,
-    collected: bool
-}
-
 main :: proc() {
     entities: [dynamic]rawptr
     defer delete(entities)
@@ -25,31 +18,32 @@ main :: proc() {
     defer raylib.UnloadRenderTexture(shadow_texture)
     raylib.SetTextureFilter(shadow_texture.texture, .BILINEAR)
 
+    i1 := ItemCreate({100, 100}, {16, 16}, {255, 255, 0, 255})
+    i2 := ItemCreate({540, 100}, {16, 16}, {255, 255, 0, 255})
+    i3 := ItemCreate({540, 412}, {16, 16}, {255, 255, 0, 255})
+    i4 := ItemCreate({100, 412}, {16, 16}, {255, 255, 0, 255})
+    i5 := ItemCreate({200, 200}, {16, 16}, {255, 255, 0, 255})
+    i6 := ItemCreate({440, 200}, {16, 16}, {255, 255, 0, 255})
+    i7 := ItemCreate({440, 312}, {16, 16}, {255, 255, 0, 255})
+    i8 := ItemCreate({200, 312}, {16, 16}, {255, 255, 0, 255})
+
+    append(&entities, &i1)
+    append(&entities, &i2)
+    append(&entities, &i3)
+    append(&entities, &i4)
+    append(&entities, &i5)
+    append(&entities, &i6)
+    append(&entities, &i7)
+    append(&entities, &i8)
+
     player := PlayerCreate(320, 256, 32)
     player2 := PlayerCreate(160, 128, 32)
     
     append(&entities, &player)
     append(&entities, &player2)
 
-    items: [dynamic]Item
-    defer delete(items)
-
-    append(&items, Item{{100, 100}, {16, 16}, {255, 255, 0, 255}, false})
-    append(&items, Item{{540, 100}, {16, 16}, {255, 255, 0, 255}, false})
-    append(&items, Item{{540, 412}, {16, 16}, {255, 255, 0, 255}, false})
-    append(&items, Item{{100, 412}, {16, 16}, {255, 255, 0, 255}, false})
-    append(&items, Item{{200, 200}, {16, 16}, {255, 255, 0, 255}, false})
-    append(&items, Item{{440, 200}, {16, 16}, {255, 255, 0, 255}, false})
-    append(&items, Item{{440, 312}, {16, 16}, {255, 255, 0, 255}, false})
-    append(&items, Item{{200, 312}, {16, 16}, {255, 255, 0, 255}, false})
-
     for !raylib.WindowShouldClose() {
         raylib.BeginTextureMode(shadow_texture)
-        for item in items {
-            if !item.collected {
-                raylib.DrawRectangleV((item.pos * {1, -1}) + {8, 490}, item.size, item.color)
-            }
-        }
         raylib.ClearBackground({0, 0, 0, 0})
         for rp in entities {
             e := cast(^Entity)rp
@@ -58,7 +52,9 @@ main :: proc() {
             p.pos += {16, 500}
             p.angle *= -1
             p.angle += 180
-            p.Draw(&p)
+            if e.state != .DESTROYED {
+                p.Draw(&p)
+            }
         }
         raylib.EndTextureMode()
 
@@ -66,16 +62,11 @@ main :: proc() {
         raylib.ClearBackground(raylib.BLUE)
         raylib.DrawTexture(shadow_texture.texture, 0, 0, {0, 0, 0, 64})
         
-        for item in items {
-            if !item.collected {
-                raylib.DrawRectangleV(item.pos, item.size, item.color)
-            }
-        }
-
-       
         for rp in entities {
             e := cast(^Entity)rp
-            e.Draw(e)
+            if e.state != .DESTROYED {
+                e.Draw(e)
+            }
         }
 
         left : raylib.Vector2 = {raylib.GetGamepadAxisMovement(0, .LEFT_X), raylib.GetGamepadAxisMovement(0, .LEFT_Y)}
@@ -154,15 +145,21 @@ main :: proc() {
             raylib.DrawFPS(10, 480)
         }
 
-        raylib.EndDrawing() 
+        raylib.EndDrawing()
 
-        for &item in items {
-            if raylib.Vector2Distance(player.pos, item.pos) < 32 {
-                if !item.collected {
-                    player.health += 100
+        for rp1 in entities {
+            e1 := cast(^Entity)rp1
+
+            if e1.type == Player {
+                for rp2 in entities {
+                    e2 := cast(^Entity)rp2
+
+                    if e2.type == Item {
+                        if raylib.Vector2Distance(e1.pos, e2.pos) < (e1.size.x + e2.size.x) {
+                            e2.state = .DESTROYED
+                        }
+                    }
                 }
-
-                item.collected = true
             }
         }
     }
