@@ -89,9 +89,15 @@ main :: proc() {
         }
 
         if raylib.IsKeyDown(.LEFT) {
-                player.vel.x -= max_speed * raylib.GetFrameTime()
+                player2.vel.x -= max_speed * raylib.GetFrameTime()
             } else if raylib.IsKeyDown(.RIGHT) {
-                player.vel.x += max_speed * raylib.GetFrameTime()
+                player2.vel.x += max_speed * raylib.GetFrameTime()
+            }
+
+        if raylib.IsKeyDown(.UP) {
+                player2.vel.y -= max_speed * raylib.GetFrameTime()
+            } else if raylib.IsKeyDown(.DOWN) {
+                player2.vel.y += max_speed * raylib.GetFrameTime()
             }
 
         player.vel += (left * 100)
@@ -112,6 +118,8 @@ main :: proc() {
 
         player.vel -= (player.vel - (player.vel * 0.9))
         player.pos += (player.vel * raylib.GetFrameTime())
+        player2.vel -= (player2.vel - (player2.vel * 0.9))
+        player2.pos += (player2.vel * raylib.GetFrameTime())
         
         angle := math.to_degrees(math.atan2(left.x, -left.y))
         player.angle = math.to_degrees(math.atan2(right.x, -right.y))
@@ -140,6 +148,8 @@ main :: proc() {
 
         raylib.DrawText(raylib.TextFormat("Health: %08i", player.health), 12, 12, 20, raylib.BLACK)
         raylib.DrawText(raylib.TextFormat("Health: %08i", player.health), 10, 10, 20, raylib.GREEN)
+        raylib.DrawText(raylib.TextFormat("Health: %08i", player2.health), 412, 12, 20, raylib.BLACK)
+        raylib.DrawText(raylib.TextFormat("Health: %08i", player2.health), 410, 10, 20, raylib.GREEN)
 
         when ODIN_DEBUG {
             raylib.DrawFPS(10, 480)
@@ -156,6 +166,10 @@ main :: proc() {
 
                     if e2.type == Item {
                         if raylib.Vector2Distance(e1.pos, e2.pos) < (e1.size.x + e2.size.x) {
+                            if e2.state != .DESTROYED {
+                                p := cast(^Player)e1
+                                p.health += 100
+                            }
                             e2.state = .DESTROYED
                         }
                     }
