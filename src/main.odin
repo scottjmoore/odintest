@@ -12,6 +12,19 @@ Item :: struct {
 }
 
 main :: proc() {
+    {
+        entities: Entities = EntitiesCreate()
+        defer EntitiesDestroy(entities)
+
+        e1 := entities->Add(&Entity{})
+        e2 := entities->Add(&Entity{})
+
+        e11 := e1.children->Add(&Entity{})
+        e21 := e2.children->Add(&Entity{})
+
+        e111 := e11.children->Add(&Entity{})
+        e211 := e21.children->Add(&Entity{})
+    }
 
     raylib.SetConfigFlags({.MSAA_4X_HINT})
     raylib.InitWindow(640, 512, "Odin - Raylib")
