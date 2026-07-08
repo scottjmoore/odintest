@@ -4,7 +4,7 @@
         {
             "type": "shell",
             "label": "Build (Debug)",
-            "command": "odin build ${workspaceFolder}/src -debug -show-timings -out:${workspaceFolder}/bin/odintest-debug",
+            "command": "odin run ${workspaceFolder}/build -debug;odin build ${workspaceFolder}/src -debug -show-timings -out:${workspaceFolder}/bin/odintest-debug",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -14,7 +14,7 @@
         {
             "type": "shell",
             "label": "Build (Release)",
-            "command": "odin build ${workspaceFolder}/src -show-timings -out:${workspaceFolder}/bin/odintest",
+            "command": "odin run ${workspaceFolder}/build -debug;odin build ${workspaceFolder}/src -show-timings -out:${workspaceFolder}/bin/odintest",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
