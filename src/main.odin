@@ -6,16 +6,15 @@ import "vendor:raylib"
 
 main :: proc() {
 
-    MyGame :: struct {
-        using Game
+    MyGameData :: struct {
+        score: int
     }
 
-    myGame : MyGame
+    myGame : Game = DEFAULT_GAME
+    myGameData : MyGameData = { 100 }
+    myGame.data = &myGameData
 
-    myGame.isRunning = true
-    myGame.AddState = DEFAULT_GAME.AddState
-    myGame.Draw = DEFAULT_GAME.Draw
-    myGame.Update = DEFAULT_GAME.Update
+    fmt.println((cast(^MyGameData)myGame.data))
 
     myGameTitle : GameState = DEFAULT_GAME_STATE
     myGameLoop : GameState = DEFAULT_GAME_STATE
@@ -26,17 +25,15 @@ main :: proc() {
     myGameLoop->Pause()
     myGameSettings->Pause()
 
-    //append(&myGame.states, &myGameTitle)
-    //append(&myGame.states, &myGameLoop)
-    //append(&myGame.states, &myGameSettings)
-
-    myGame->AddState(&myGameTitle)
-    myGame->AddState(&myGameLoop)
-    myGame->AddState(&myGameSettings)
+    myGameTitleIndex := myGame->AddState(&myGameTitle)
+    myGameLoopIndex := myGame->AddState(&myGameLoop)
+    myGameSettingsIndex := myGame->AddState(&myGameSettings)
 
     myGame->Update()
     myGame->Draw()
 
+    myGameTitle->Stop()
+    myGameTitle->Destroy()
     myGameLoop->Resume()
     myGameSettings->Resume()
 

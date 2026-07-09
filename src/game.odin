@@ -6,24 +6,41 @@ DEFAULT_GAME :: Game  {
     isRunning = true,
 
     AddState = GameAddState,
+    RemoveState = GameRemoveState,
+
     Update = GameUpdate,
     Draw = GameDraw
 }
 
 Game :: struct {
     isRunning: bool,
-
     states: [dynamic]^GameState,
+    data: rawptr,
 
-    AddState: proc(g: ^Game, gs: ^GameState),
-    
+    AddState: proc(g: ^Game, gs: ^GameState) -> int,
+    RemoveState: proc(g: ^Game, idx: int),
+
     Update: proc(g: Game),
     Draw: proc(g: Game)
 }
 
-GameAddState :: proc(g: ^Game, gs: ^GameState) {
+GameAddState :: proc(g: ^Game, gs: ^GameState) -> int{
     fmt.println("GameAddState()")
+    
     append(&g.states, gs)
+    gs.game = g
+    gs.index = len(g.states) - 1
+
+    return gs.index
+}
+
+GameRemoveState :: proc(g: ^Game, idx: int) {
+    fmt.println("GameRemoveState()")
+    fmt.println("\t", idx)
+    fmt.println("\t", g)
+
+    ordered_remove(&g.states, idx)
+    fmt.println("\t", g)
 }
 
 GameUpdate :: proc(g: Game) {
@@ -49,8 +66,8 @@ DEFAULT_GAME_STATE :: GameState {
 
     Pause = GameStatePause,
     Resume = GameStateResume,
-    //Stop = GameStateStop,
-    //Destroy = GameStateDestroy,
+    Stop = GameStateStop,
+    Destroy = GameStateDestroy,
 
     Update = GameStateUpdate,
     Draw = GameStateDraw
@@ -58,6 +75,8 @@ DEFAULT_GAME_STATE :: GameState {
 
 GameState :: struct {
     state : GAME_STATE,
+    game : ^Game,
+    index : int,
 
     Pause: proc(gs: ^GameState),
     Resume: proc(gs: ^GameState),
@@ -93,6 +112,28 @@ GameStateResume :: proc(gs: ^GameState) {
     if gs.state == .PAUSED {
         gs.state = .RUNNING
     }
+
+    fmt.println("\t", gs)
+}
+
+GameStateStop :: proc(gs: ^GameState) {
+    fmt.println("GameStateStop()")
+    fmt.println("\t", gs)
+
+    gs.state = .STOPPED
+
+    fmt.println("\t", gs)
+}
+
+GameStateDestroy :: proc(gs: ^GameState) {
+    fmt.println("GameStateDestroy()")
+    fmt.println("\t", gs)
+
+    if gs.state == .STOPPED {
+        gs.state = .DESTROYED
+    }
+
+    gs.game->RemoveState(gs.index)
 
     fmt.println("\t", gs)
 }
