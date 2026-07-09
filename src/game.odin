@@ -37,6 +37,10 @@ GamePopState :: proc(g: ^Game) {
     fmt.println("GamePopState()")
     g.state = g.state.previous
     g.state.previous = nil
+
+    if g.state == nil {
+        g.isRunning = false
+    }
 }
 
 GameUpdate :: proc(g: Game) {
