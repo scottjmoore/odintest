@@ -4,7 +4,12 @@ import "core:fmt"
 import "core:math"
 import "vendor:raylib"
 
+import "assets/graphics/bitmaps"
+
 main :: proc() {
+
+    fmt.println(len(bitmaps.title_screen))
+    
 
     MyGameData :: struct {
         score: int
