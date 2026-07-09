@@ -27,9 +27,9 @@ main :: proc() {
     myGameLoop->Pause()
     myGameSettings->Pause()
 
-    myGameTitleIndex := myGame->AddState(&myGameTitle)
-    myGameLoopIndex := myGame->AddState(&myGameLoop)
-    myGameSettingsIndex := myGame->AddState(&myGameSettings)
+    myGame->PushState(&myGameTitle)
+    myGame->PushState(&myGameLoop)
+    myGame->PushState(&myGameSettings)
 
     myGame->Update()
     myGame->Draw()

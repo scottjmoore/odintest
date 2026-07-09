@@ -5,8 +5,8 @@ import "core:fmt"
 DEFAULT_GAME :: Game  {
     isRunning = true,
 
-    AddState = GameAddState,
-    RemoveState = GameRemoveState,
+    PushState = GamePushState,
+    PopState = GamePopState,
 
     Update = GameUpdate,
     Draw = GameDraw
@@ -14,51 +14,41 @@ DEFAULT_GAME :: Game  {
 
 Game :: struct {
     isRunning: bool,
-    states: [dynamic]^GameState,
+    state: ^GameState,
     data: rawptr,
 
-    AddState: proc(g: ^Game, gs: ^GameState) -> int,
-    RemoveState: proc(g: ^Game, idx: int),
+    PushState: proc(g: ^Game, gs: ^GameState),
+    PopState: proc(g: ^Game),
 
     Update: proc(g: Game),
     Draw: proc(g: Game)
 }
 
-GameAddState :: proc(g: ^Game, gs: ^GameState) -> int{
-    fmt.println("GameAddState()")
-    
-    append(&g.states, gs)
-    gs.game = g
-    gs.index = len(g.states) - 1
+GamePushState :: proc(g: ^Game, gs: ^GameState) {
+    fmt.println("GamePushState()")
 
-    return gs.index
+    gs.previous = g.state
+    gs.game = g
+    g.state = gs
+
 }
 
-GameRemoveState :: proc(g: ^Game, idx: int) {
-    fmt.println("GameRemoveState()")
-    fmt.println("\t", idx)
-    fmt.println("\t", g)
-
-    ordered_remove(&g.states, idx)
-    fmt.println("\t", g)
+GamePopState :: proc(g: ^Game) {
+    fmt.println("GamePopState()")
+    g.state = g.state.previous
+    g.state.previous = nil
 }
 
 GameUpdate :: proc(g: Game) {
     fmt.println("GameUpdate()")
-    for s in g.states {
-        if s.state == .RUNNING {
-            s->Update()
-        }
-    }
+    g.state->Update()
 }
  
 GameDraw :: proc(g: Game) {
     fmt.println("GameDraw()")
-    for s in g.states {
-        if s.state == .RUNNING {
-            s->Draw()
+        if g.state.state == .RUNNING {
+            g.state->Draw()
         }
-    }
 }
 
 DEFAULT_GAME_STATE :: GameState {
@@ -76,7 +66,7 @@ DEFAULT_GAME_STATE :: GameState {
 GameState :: struct {
     state : GAME_STATE,
     game : ^Game,
-    index : int,
+    previous : ^GameState,
 
     Pause: proc(gs: ^GameState),
     Resume: proc(gs: ^GameState),
@@ -133,7 +123,7 @@ GameStateDestroy :: proc(gs: ^GameState) {
         gs.state = .DESTROYED
     }
 
-    gs.game->RemoveState(gs.index)
+    gs.game->PopState()
 
     fmt.println("\t", gs)
 }
