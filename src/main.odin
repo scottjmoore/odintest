@@ -8,9 +8,6 @@ import "assets/graphics/bitmaps"
 
 main :: proc() {
 
-    fmt.println(len(bitmaps.title_screen))
-    
-
     MyGameData :: struct {
         score: int
     }
@@ -54,6 +51,10 @@ main :: proc() {
 
     raylib.SetTargetFPS(60)
 
+    //title_screen := raylib.LoadImageFromMemory(".png", &bitmaps.title_screen[0], i32(len(bitmaps.title_screen)))
+    title_screen := raylib.LoadImage("/home/scottmoore/Workspace/github.com/scottjmoore/odintest/src/assets/graphics/bitmaps/bin/title_screen.png")
+    title_screen_texture := raylib.LoadTextureFromImage(title_screen)
+
     shadow_texture := raylib.LoadRenderTexture(640, 512)
     defer raylib.UnloadRenderTexture(shadow_texture)
     raylib.SetTextureFilter(shadow_texture.texture, .BILINEAR)
@@ -85,6 +86,7 @@ main :: proc() {
     for !raylib.WindowShouldClose() {
         raylib.BeginTextureMode(shadow_texture)
         raylib.ClearBackground({0, 0, 0, 0})
+
         for rp in entities {
             e := cast(^Entity)rp
             p := e^
@@ -100,6 +102,7 @@ main :: proc() {
 
         raylib.BeginDrawing()
         raylib.ClearBackground(raylib.BLUE)
+        raylib.DrawTexture(title_screen_texture, 0, 0, {255, 255, 255, 255})
         raylib.DrawTexture(shadow_texture.texture, 0, 0, {0, 0, 0, 64})
         
         for rp in entities {
