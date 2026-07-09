@@ -5,7 +5,7 @@ import "core:math"
 import "vendor:raylib"
 
 
-EntityState :: enum {
+ENTITY_STATE :: enum {
     ENABLED,
     DISABLED,
     DESTROYED
@@ -18,7 +18,7 @@ Entity :: struct {
     size: raylib.Vector2,
     angle: f32,
     color: raylib.Color,
-    state: EntityState,
+    state: ENTITY_STATE,
 
     Draw: proc(rp: rawptr)
 }

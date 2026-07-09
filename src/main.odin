@@ -5,6 +5,44 @@ import "core:math"
 import "vendor:raylib"
 
 main :: proc() {
+
+    MyGame :: struct {
+        using Game
+    }
+
+    myGame : MyGame
+
+    myGame.isRunning = true
+    myGame.AddState = DEFAULT_GAME.AddState
+    myGame.Draw = DEFAULT_GAME.Draw
+    myGame.Update = DEFAULT_GAME.Update
+
+    myGameTitle : GameState = DEFAULT_GAME_STATE
+    myGameLoop : GameState = DEFAULT_GAME_STATE
+    myGameSettings : GameState = DEFAULT_GAME_STATE
+
+    myGame.isRunning = false
+
+    myGameLoop->Pause()
+    myGameSettings->Pause()
+
+    //append(&myGame.states, &myGameTitle)
+    //append(&myGame.states, &myGameLoop)
+    //append(&myGame.states, &myGameSettings)
+
+    myGame->AddState(&myGameTitle)
+    myGame->AddState(&myGameLoop)
+    myGame->AddState(&myGameSettings)
+
+    myGame->Update()
+    myGame->Draw()
+
+    myGameLoop->Resume()
+    myGameSettings->Resume()
+
+    myGame->Update()
+    myGame->Draw()
+
     entities: [dynamic]rawptr
     defer delete(entities)
 

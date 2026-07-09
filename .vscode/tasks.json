@@ -31,8 +31,8 @@
                 "Build (Debug)"
             ],
             "group": {
-                "kind": "build",
-                "isDefault": false
+                "kind": "test",
+                "isDefault": true
             }
         },
         {
@@ -45,7 +45,7 @@
                 "Build (Release)"
             ],
             "group": {
-                "kind": "build",
+                "kind": "test",
                 "isDefault": false
             }
         }
